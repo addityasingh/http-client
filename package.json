@@ -1,7 +1,7 @@
 {
-  "name": "http-client",
+  "name": "smart-http-client",
   "version": "1.0.0",
-  "description": "",
+  "description": "A http client with configurable circuit breaker and back pressure",
   "main": "index.js",
   "scripts": {
     "precommit": "lint-staged",
@@ -12,7 +12,7 @@
     "build": "tsc",
     "test": "jest"
   },
-  "author": "",
+  "author": "Aditya Pratap Singh<adisinghrajput@gmail.com>",
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^24.0.13",
