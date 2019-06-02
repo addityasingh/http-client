@@ -3,7 +3,7 @@ import clientWithTimings from "../index";
 
 describe.only("http-client with timer", () => {
   test("should be able to make http request to remote http server", async () => {
-    nock("http://api.github.com")
+    nock("http://example.org")
       .get("/")
       .reply(200, {
         key: "value"
@@ -11,7 +11,7 @@ describe.only("http-client with timer", () => {
 
     clientWithTimings(
       {
-        url: "https://api.github.com"
+        url: "http://example.org"
       },
       (_, res) => {
         expect(res.timings).toBeInstanceOf(Object);
@@ -21,7 +21,7 @@ describe.only("http-client with timer", () => {
   });
 
   test("should be able to make https request to remote http server", async () => {
-    nock("https://api.github.com")
+    nock("https://example.org")
       .get("/")
       .reply(200, {
         key: "value"
@@ -29,7 +29,7 @@ describe.only("http-client with timer", () => {
 
     clientWithTimings(
       {
-        url: "https://api.github.com"
+        url: "https://example.org"
       },
       (_, res) => {
         expect(res.timings).toBeInstanceOf(Object);
@@ -39,7 +39,7 @@ describe.only("http-client with timer", () => {
   });
 
   test("should be able to return timings for http request response lifecycle", async () => {
-    nock("https://api.github.com")
+    nock("https://example.org")
       .get("/")
       .reply(200, {
         key: "value"
@@ -47,10 +47,9 @@ describe.only("http-client with timer", () => {
 
     clientWithTimings(
       {
-        url: "https://api.github.com"
+        url: "https://example.org"
       },
       (_, res) => {
-        expect(res.timings).toBeInstanceOf(Object);
         expect(res.timings.dnsLookup).not.toBeDefined();
         expect(res.timings.tcpConnectionTime).toBeDefined();
         expect(res.timings.tlsHandshakeTime).toBeDefined();
