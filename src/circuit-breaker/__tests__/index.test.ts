@@ -22,16 +22,19 @@ describe("Circuit breaker", () => {
     jest.useFakeTimers();
     const breaker = new CircuitBreaker();
     const mockCommandFailure = createMockCommand(true);
+    const mockCommandSuccess = createMockCommand(false);
+    await breaker.run(mockCommandSuccess);
+    await breaker.run(mockCommandSuccess);
     await breaker.run(mockCommandFailure);
     jest.advanceTimersByTime(1000);
-    await breaker.run(mockCommandFailure);
-
-    expect(breaker.isOpen()).toEqual(true);
+    expect(breaker.run(mockCommandFailure)).rejects.toThrowError(
+      "[Breaker Open]"
+    );
 
     jest.useRealTimers();
   });
 
-  test.only("it should open breaker after error threshold in provided time frame", async () => {
+  test("it should open breaker after error threshold in provided time frame", async () => {
     jest.useFakeTimers();
     const breaker = new CircuitBreaker({
       timeFrame: 2000

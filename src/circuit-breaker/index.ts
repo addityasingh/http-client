@@ -38,8 +38,7 @@ export class CircuitBreaker {
       }
       case BreakerState.CLOSED:
       default: {
-        await this.execute();
-        return;
+        return await this.execute();
       }
     }
   }
