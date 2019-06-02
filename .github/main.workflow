@@ -23,13 +23,13 @@ action "test" {
 action "lint" {
   needs = "install"
   uses = "actions/npm@master"
-  args = "run test"
+  args = "run lint"
 }
 
 action "check-format" {
   needs = "install"
   uses = "actions/npm@master"
-  args = "run test"
+  args = "run check-format"
 }
 
 # workflow "publish on release" {
