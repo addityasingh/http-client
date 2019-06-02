@@ -1,43 +1,43 @@
 export interface Job {
-    executor: (() => Promise<any>) | (() => any);
-    timeout: number;
+  executor: (() => Promise<any>) | (() => any);
+  timeout: number;
 }
 
 export class Stack {
-    private list: Array<Job> = [];
+  private list: Array<Job> = [];
 
-    constructor(private capacity: number) {}
+  constructor(private capacity: number) {}
 
-    isEmpty() {
-        return this.list.length === 0;
-    }
+  isEmpty() {
+    return this.list.length === 0;
+  }
 
-    isFull() {
-        return this.capacity > 0 && this.list.length === this.capacity;
-    }
+  isFull() {
+    return this.capacity > 0 && this.list.length === this.capacity;
+  }
 
-    // Push at top of job stack
-    push(job: Job) {
-        this.list.push(job);
-    }
+  // Push at top of job stack
+  push(job: Job) {
+    this.list.push(job);
+  }
 
-    // Get last element from bottom of stack
-    getBottom(): Job {
-        return this.list[this.list.length - 1];
-    }
+  // Get last element from bottom of stack
+  getBottom(): Job {
+    return this.list[this.list.length - 1];
+  }
 
-    // Remove specific job
-    remove(job: Job){
-        //TODO
-    }
+  // Remove specific job
+  remove(job: Job) {
+    //TODO
+  }
 
-    // Pop the first job (from top of stack)
-    pop(): Job {
-        return this.list.shift()
-    }
+  // Pop the first job (from top of stack)
+  pop(): Job {
+    return this.list.shift();
+  }
 
-    // Remove the last job (from bottom of the stack)
-    shift(): Job {
-        return this.list.pop()
-    }
+  // Remove the last job (from bottom of the stack)
+  shift(): Job {
+    return this.list.pop();
+  }
 }

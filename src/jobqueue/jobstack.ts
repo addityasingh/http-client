@@ -16,48 +16,44 @@ import { Job, Stack } from "./stack";
  * 6.b Remove the job to free space
  */
 
- class TimeoutError extends Error {
-     constructor(message: string) {
-         super(message);
-         this.name = "TimeoutError"
-     }
- }
-
- class JobStackFullError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = "JobStackFullError"
-    }
+class TimeoutError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "TimeoutError";
+  }
 }
 
- interface StackOptions {
-     MaxConcurrency: number;
-     Timeout: number; // in ms
-     MaxJobs: number; // Not sure if this is needed together with MaxConcurrency
- };
+class JobStackFullError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "JobStackFullError";
+  }
+}
 
- const POLLER_TIME = 100;
+interface StackOptions {
+  MaxConcurrency: number;
+  Timeout: number; // in ms
+  MaxJobs: number; // Not sure if this is needed together with MaxConcurrency
+}
 
- class JobStack {
-     private stack: Stack;
-     constructor(private options?: StackOptions) {
-        this.options.MaxConcurrency = this.options.MaxConcurrency || 1;
-        this.options.MaxJobs = this.options.MaxJobs || 1;
-        this.options.Timeout = this.options.Timeout || 1000;
+const POLLER_TIME = 100;
 
-        this.stack = new Stack(this.options.MaxJobs);
-        this.run();
-     }
+class JobStack {
+  private stack: Stack;
+  constructor(private options?: StackOptions) {
+    this.options.MaxConcurrency = this.options.MaxConcurrency || 1;
+    this.options.MaxJobs = this.options.MaxJobs || 1;
+    this.options.Timeout = this.options.Timeout || 1000;
 
-     private run() {
-        const poller = setInterval(() => {
+    this.stack = new Stack(this.options.MaxJobs);
+    this.run();
+  }
 
-        }, POLLER_TIME);
+  private run() {
+    const poller = setInterval(() => {}, POLLER_TIME);
 
-        poller.unref();
-     }
+    poller.unref();
+  }
 
-     execute(job: Job) {
-
-     }
- }
+  execute(job: Job) {}
+}
