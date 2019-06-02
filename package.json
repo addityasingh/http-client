@@ -4,7 +4,7 @@
   "description": "A http client with configurable circuit breaker and back pressure",
   "main": "index.js",
   "scripts": {
-    "precommit": "lint-staged",
+    "precommit": "npm run format && lint-staged",
     "format": "prettier --no-config --write 'src/**/*.ts'",
     "check-format": "prettier --no-config -l 'src/**/*.ts'",
     "lint": "tslint --project .",
