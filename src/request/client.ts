@@ -2,7 +2,7 @@ import * as http from "http";
 import * as https from "https";
 import { parse } from "url";
 
-import getTimings, { HttpTimestamp, HttpTiming } from './timings';
+import getTimings, { HttpTimestamp, HttpTiming } from "./timings";
 
 class HttpError extends Error {
   code: string;
@@ -14,13 +14,13 @@ interface TimedResponse {
 }
 
 interface TimedRequestOptions extends https.RequestOptions {
-  url: string,
+  url: string;
   timeout?: number;
 }
 
 export default function clientWithTimings(
   options: TimedRequestOptions,
-  callback: (err: HttpError, res: TimedResponse) => any,
+  callback: (err: HttpError, res: TimedResponse) => any
 ): void {
   const timings: HttpTimestamp = {
     startTimestamp: process.hrtime(),

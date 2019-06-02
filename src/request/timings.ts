@@ -29,7 +29,10 @@ export default function getTimings(httpTimings: HttpTimestamp): HttpTiming {
       )
     : undefined;
   const tlsHandshakeTime = httpTimings.tlsHandshakeTimestamp
-    ? findDuration(httpTimings.tcpConnectionTimestamp, httpTimings.tlsHandshakeTimestamp)
+    ? findDuration(
+        httpTimings.tcpConnectionTimestamp,
+        httpTimings.tlsHandshakeTimestamp
+      )
     : undefined;
   const firstByte = findDuration(
     httpTimings.tlsHandshakeTimestamp || httpTimings.tcpConnectionTimestamp,
@@ -54,6 +57,5 @@ export default function getTimings(httpTimings: HttpTimestamp): HttpTiming {
 }
 
 function findDuration([secStart, nanoSecStart], [secEnd, nanoSecEnd]) {
-    return ((secEnd - secStart) * 1e9 + (nanoSecEnd - nanoSecStart)) / 1e6;
-  }
-  
+  return ((secEnd - secStart) * 1e9 + (nanoSecEnd - nanoSecStart)) / 1e6;
+}
