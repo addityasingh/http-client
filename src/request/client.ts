@@ -1,68 +1,72 @@
 import * as http from "http";
 import * as https from "https";
-import getTimings, { HttpTiming } from './timings';
+import { parse } from "url";
+
+import getTimings, { HttpTimestamp, HttpTiming } from './timings';
 
 class HttpError extends Error {
   code: string;
 }
 
 interface TimedResponse {
-  timings: any;
+  timings: HttpTiming;
   body: any;
 }
 
 interface TimedRequestOptions extends https.RequestOptions {
-  timeout: number;
+  url: string,
+  timeout?: number;
 }
 
 export default function clientWithTimings(
   options: TimedRequestOptions,
-  callback: (err: HttpError, res: TimedResponse) => any
-) {
-  const timings: HttpTiming = {
-    startTime: process.hrtime(),
-    dnsLookupTime: undefined,
-    tcpConnectionTime: undefined,
-    tlsHandshakeTime: undefined,
-    responseBodyStartTime: undefined,
-    responseBodyEndTime: undefined
+  callback: (err: HttpError, res: TimedResponse) => any,
+): void {
+  const timings: HttpTimestamp = {
+    startTimestamp: process.hrtime(),
+    dnsLookupTimestamp: undefined,
+    tcpConnectionTimestamp: undefined,
+    tlsHandshakeTimestamp: undefined,
+    responseBodyStartTimestamp: undefined,
+    responseBodyEndTimestamp: undefined
   };
-  const { protocol } = options;
+  const requestOptions = Object.assign({}, parse(options.url), options);
+  const { protocol, timeout = 2000 } = requestOptions;
   const usedProtocol = protocol === "https:" ? https : http;
 
   let response = "";
   const request = usedProtocol
-    .request(options, res => {
+    .request(requestOptions, res => {
       res.once("data", () => {
-        timings.responseBodyStartTime = process.hrtime();
+        timings.responseBodyStartTimestamp = process.hrtime();
       });
 
       res.on("data", chunk => (response += chunk));
       res.on("end", () => {
-        timings.responseBodyEndTime = process.hrtime();
+        timings.responseBodyEndTimestamp = process.hrtime();
         callback(null, {
           body: response,
           timings: getTimings(timings)
         });
       });
     })
-    .setTimeout(options.timeout)
+    .setTimeout(timeout)
     .on("error", callback);
 
   request.on("socket", socket => {
     // Socket created for dnslookup
     socket.on("lookup", () => {
-      timings.dnsLookupTime = process.hrtime();
+      timings.dnsLookupTimestamp = process.hrtime();
     });
 
     // TCP Connection established
     socket.on("connect", () => {
-      timings.tcpConnectionTime = process.hrtime();
+      timings.tcpConnectionTimestamp = process.hrtime();
     });
 
     // TLS Handshake complete
     socket.on("secureConnect", () => {
-      timings.tlsHandshakeTime = process.hrtime();
+      timings.tlsHandshakeTimestamp = process.hrtime();
     });
     socket.on("timeout", () => {
       // Drop request on timeout

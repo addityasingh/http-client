@@ -1,38 +1,47 @@
 type HighResolutionTimestamp = [number, number];
 
-export interface HttpTiming {
-  startTime: HighResolutionTimestamp;
-  dnsLookupTime: HighResolutionTimestamp;
-  tcpConnectionTime: HighResolutionTimestamp;
-  tlsHandshakeTime: HighResolutionTimestamp;
-  responseBodyStartTime: HighResolutionTimestamp;
-  responseBodyEndTime: HighResolutionTimestamp;
+export interface HttpTimestamp {
+  startTimestamp: HighResolutionTimestamp;
+  dnsLookupTimestamp: HighResolutionTimestamp;
+  tcpConnectionTimestamp: HighResolutionTimestamp;
+  tlsHandshakeTimestamp: HighResolutionTimestamp;
+  responseBodyStartTimestamp: HighResolutionTimestamp;
+  responseBodyEndTimestamp: HighResolutionTimestamp;
 }
 
-export default function getTimings(httpTimings) {
-  const dnsLookup = httpTimings.dnsLookupTime
-    ? findDuration(httpTimings.startTime, httpTimings.dnsLookupTime)
+export interface HttpTiming {
+  dnsLookup: number;
+  tcpConnectionTime: number;
+  tlsHandshakeTime: number;
+  firstByte: number;
+  contentTransfer: number;
+  total: number;
+}
+
+export default function getTimings(httpTimings: HttpTimestamp): HttpTiming {
+  const dnsLookup = httpTimings.dnsLookupTimestamp
+    ? findDuration(httpTimings.startTimestamp, httpTimings.dnsLookupTimestamp)
     : undefined;
-  const tcpConnectionTime = httpTimings.tcpConnectionTime
+  const tcpConnectionTime = httpTimings.tcpConnectionTimestamp
     ? findDuration(
-        httpTimings.dnsLookupTime || httpTimings.startTime,
-        httpTimings.tcpConnectionTime
+        httpTimings.dnsLookupTimestamp || httpTimings.startTimestamp,
+        httpTimings.tcpConnectionTimestamp
       )
     : undefined;
-  const tlsHandshakeTime = httpTimings.tlsHandshakeTime
-    ? findDuration(httpTimings.tcpConnectionTime, httpTimings.tlsHandshakeTime)
+  const tlsHandshakeTime = httpTimings.tlsHandshakeTimestamp
+    ? findDuration(httpTimings.tcpConnectionTimestamp, httpTimings.tlsHandshakeTimestamp)
     : undefined;
   const firstByte = findDuration(
-    httpTimings.tlsHandshakeTime || httpTimings.tcpConnectionTime,
-    httpTimings.responseBodyStartTime
+    httpTimings.tlsHandshakeTimestamp || httpTimings.tcpConnectionTimestamp,
+    httpTimings.responseBodyStartTimestamp
   );
   const contentTransfer = findDuration(
-    httpTimings.responseBodyStartTime,
-    httpTimings.responseBodyEndTime
+    httpTimings.responseBodyStartTimestamp,
+    httpTimings.responseBodyEndTimestamp
   );
   const total = findDuration(
-    httpTimings.startTime,
-    httpTimings.responseBodyEndTime
+    httpTimings.startTimestamp,
+    httpTimings.responseBodyEndTimestamp
   );
   return {
     dnsLookup,
