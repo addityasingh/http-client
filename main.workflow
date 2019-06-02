@@ -1,6 +1,6 @@
 workflow "build and test" {
   on = "push"
-  resolves = ["build", "test"]
+  resolves = ["build", "test", "lint", "check-format"]
 }
 
 action "install" {
@@ -15,6 +15,18 @@ action "build" {
 }
 
 action "test" {
+  needs = "install"
+  uses = "actions/npm@master"
+  args = "run test"
+}
+
+action "lint" {
+  needs = "install"
+  uses = "actions/npm@master"
+  args = "run test"
+}
+
+action "check-format" {
   needs = "install"
   uses = "actions/npm@master"
   args = "run test"
