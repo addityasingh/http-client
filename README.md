@@ -7,5 +7,10 @@ yarn
 yarn test
 ```
 
+## Examples
+```
+yarn build && node examples/<example scenario>.js
+```
+
 ## Pending 
 - Profile, benchmark and improve
