@@ -1,9 +1,7 @@
-const {parse} = require('url');
 const requestWithTiming = require('../dist/request/index').default;
 
-requestWithTiming(Object.assign({}, 
-    parse("https://api.github.com/users"),
-    {
+requestWithTiming({
+        url: "https://api.github.com/users"
         headers: {
             'User-Agent': 'Example'
         },
